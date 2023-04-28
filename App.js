@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import MathJS from 'mathjs';
+import { Text, View, TouchableOpacity } from 'react-native';
+// import MathJS from 'mathjs';
+import { styles } from './components/Styles';
 
 export default class App extends Component {
 
@@ -16,7 +17,7 @@ export default class App extends Component {
     if (input === '=') {
       let result = '';
       try {
-        result = MathJS.eval(this.state.calculation);
+        result = eval(this.state.calculation);
       } catch (error) {
         result = 'Math Error';
       }
@@ -50,9 +51,11 @@ export default class App extends Component {
           {buttons.map((row, index) => {
             return <View key={index} style={styles.row}>
               {row.map((button) => {
-                return <TouchableOpacity key={button} style={styles.button} onPress={() => this.handleInput(button)}>
-                  <Text style={styles.buttonText}>{button}</Text>
-                </TouchableOpacity>
+                return (
+                  <TouchableOpacity key={button} style={styles.button} onPress={() => this.handleInput(button)}>
+                    <Text style={styles.buttonText}>{button}</Text>
+                  </TouchableOpacity>
+                  )
               })}
             </View>
           })}
@@ -61,50 +64,3 @@ export default class App extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  resultContainer: {
-    flex: 2,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    paddingRight: 10,
-  },
-  calculationContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    paddingRight: 10,
-  },
-  buttonsContainer: {
-    flex: 7,
-    backgroundColor: '#fff',
-  },
-  row: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  button: {
-    flex: 1,
-    alignItems: 'center',
-    alignSelf: 'stretch',
-    justifyContent: 'center',
-    borderWidth: 0.5,
-    borderColor: '#ccc',
-  },
-  buttonText: {
-    fontSize: 30,
-  },
-  result: {
-    fontSize: 50,
-    color: '#000',
-  },
-  calculation: {
-    fontSize: 30,
-    color: '#888',
-  },
-});
