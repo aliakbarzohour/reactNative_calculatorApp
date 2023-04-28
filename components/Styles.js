@@ -7,7 +7,8 @@ export const styles = StyleSheet.create({
     resultContainer: {
       flex: 2,
       backgroundColor: '#fff',
-      justifyContent: 'center',
+      display: 'flex',
+      justifyContent: 'flex-end',
       alignItems: 'flex-end',
       paddingRight: 10,
     },
