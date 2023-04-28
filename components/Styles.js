@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
     buttonsContainer: {
       flex: 7,
       backgroundColor: '#fff',
+      padding:10
     },
     row: {
       flex: 1,
