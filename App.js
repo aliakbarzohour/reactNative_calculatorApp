@@ -1,135 +1,110 @@
+import React, { Component } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import MathJS from 'mathjs';
 
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-export default function App() {
-  const [result, setResult] = useState('');
+export default class App extends Component {
 
-  const handleButtonPress = (buttonValue) => {
-    if (buttonValue === '=') {
-      calculateResult();
-    } else if (buttonValue === 'C') {
-      resetCalculator();
-    } else {
-      setResult((prevResult) => prevResult + buttonValue);
+  constructor(props) {
+    super(props);
+    this.state = {
+      result: '',
+      calculation: '',
     }
-  };
+  }
 
-  const calculateResult = () => {
-    setResult(eval(result).toString());
-  };
+  handleInput = (input) => {
+    if (input === '=') {
+      let result = '';
+      try {
+        result = MathJS.eval(this.state.calculation);
+      } catch (error) {
+        result = 'Math Error';
+      }
+      this.setState({
+        result: result,
+        calculation: '',
+      });
+    } else if (input === 'C') {
+      this.setState({
+        result: '',
+        calculation: '',
+      });
+    } else {
+      this.setState({
+        calculation: this.state.calculation + input,
+      });
+    }
+  }
 
-  const resetCalculator = () => {
-    setResult('');
-  };
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.display}>{result}</Text>
-      <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('7')}>
-          <Text style={styles.buttonText}>7</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('8')}>
-          <Text style={styles.buttonText}>8</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('9')}>
-          <Text style={styles.buttonText}>9</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('/')}>
-          <Text style={styles.buttonText}>/</Text>
-        </TouchableOpacity>
+  render() {
+    const buttons = [['C', '±', '%', '/'], ['7', '8', '9', '*'], ['4', '5', '6', '-'], ['1', '2', '3', '+'], ['0', '.', '=']];
+    return (
+      <View style={styles.container}>
+        <View style={styles.resultContainer}>
+          <Text style={styles.result}>{this.state.result}</Text>
+        </View>
+        <View style={styles.calculationContainer}>
+          <Text style={styles.calculation}>{this.state.calculation}</Text>
+        </View>
+        <View style={styles.buttonsContainer}>
+          {buttons.map((row, index) => {
+            return <View key={index} style={styles.row}>
+              {row.map((button) => {
+                return <TouchableOpacity key={button} style={styles.button} onPress={() => this.handleInput(button)}>
+                  <Text style={styles.buttonText}>{button}</Text>
+                </TouchableOpacity>
+              })}
+            </View>
+          })}
+        </View>
       </View>
-      <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('4')}>
-          <Text style={styles.buttonText}>4</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('5')}>
-          <Text style={styles.buttonText}>5</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('6')}>
-          <Text style={styles.buttonText}>6</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('*')}>
-          <Text style={styles.buttonText}>x</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('1')}>
-          <Text style={styles.buttonText}>1</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('2')}>
-          <Text style={styles.buttonText}>2</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('3')}>
-          <Text style={styles.buttonText}>3</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('-')}>
-          <Text style={styles.buttonText}>-</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('0')}>
-          <Text style={styles.buttonText}>0</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('.')}>
-          <Text style={styles.buttonText}>.</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('=')}>
-          <Text style={styles.buttonText}>=</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleButtonPress('+')}>
-          <Text style={styles.buttonText}>+</Text>
-        </TouchableOpacity>
-        
-      </View>
-      <TouchableOpacity style={styles.clearButton} onPress={resetCalculator}>
-        <Text style={styles.buttonText}>C</Text>
-      </TouchableOpacity>
-      
-    </View>
-  );
-};
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F1F1F1',
-    alignItems: 'center',
-    justifyContent: 'center',
-    display: 'flex',
   },
-  buttonRow: {
-    display: 'flex',
-    flexDirection: 'row'
+  resultContainer: {
+    flex: 2,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingRight: 10,
+  },
+  calculationContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingRight: 10,
+  },
+  buttonsContainer: {
+    flex: 7,
+    backgroundColor: '#fff',
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
   },
   button: {
-    padding: 20,
-    borderRadius: 50,
-    margin: 10,
-    backgroundColor: '#DDDDDD',
+    flex: 1,
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    borderWidth: 0.5,
+    borderColor: '#ccc',
   },
   buttonText: {
-    fontSize: 24,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    color: '#333333',
+    fontSize: 30,
   },
-  clearButton: {
-    padding: 20,
-    width: '65%',
-    borderRadius: 50,
-    margin: 10,
-    backgroundColor: 'orange',
+  result: {
+    fontSize: 50,
+    color: '#000',
   },
-  display: {
-    width: '90%',
-    margin: 10,
-    padding: 20,
-    borderRadius: 50,
-    alignSelf: 'stretch',
-    textAlign: 'right',
-    fontSize: 40,
-    fontWeight: 'bold',
-    color: '#333333',
+  calculation: {
+    fontSize: 30,
+    color: '#888',
   },
 });
