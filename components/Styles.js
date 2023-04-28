@@ -33,16 +33,18 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
       borderWidth: 0.5,
       borderColor: '#ccc',
+      borderRadius: 50,
+      margin: 5
     },
     buttonText: {
       fontSize: 30,
     },
     result: {
-      fontSize: 50,
+      fontSize: 60,
       color: '#000',
     },
     calculation: {
-      fontSize: 30,
+      fontSize: 40,
       color: '#888',
     },
   });
